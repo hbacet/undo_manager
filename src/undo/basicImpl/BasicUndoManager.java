@@ -6,7 +6,6 @@ import undo.interfaces.UndoManager;
 
 import java.util.ListIterator;
 import java.util.Vector;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by Bacet on 7/18/2017.
@@ -27,11 +26,12 @@ public class BasicUndoManager implements UndoManager {
     @Override
     public synchronized void registerChange(Change change) {
         System.out.println("Registering new change: " + change.toString());
-        if(this.iterator.hasNext()) {
-            this.removeTailingElements();
-        }
-        this.iterator.add(change);
-        change.apply(this.doc);
+
+        this.checkForNextElements();
+        this.saveChange(change);
+        this.trimChangesSize();
+
+        System.out.println("Cached changes size: " + changes.size());
     }
 
     @Override
@@ -76,11 +76,38 @@ public class BasicUndoManager implements UndoManager {
         }
     }
 
-    private void removeTailingElements() {
+    private void checkForNextElements() {
+        if (this.iterator.hasNext()) {
+            this.removeNextElements();
+        }
+    }
+
+    private void removeNextElements() {
         System.out.println("Removing tailing elements:");
-        while(this.iterator.hasNext()){
+        while (this.iterator.hasNext()) {
             System.out.println("--> Removing " + this.iterator.next().toString());
             this.iterator.remove();
+        }
+    }
+
+    private void saveChange(Change change) {
+        this.iterator.add(change);
+        change.apply(this.doc);
+    }
+
+    private void trimChangesSize() {
+        if (this.changes.size() > this.bufferSize) {
+            this.removeFirstElement();
+        }
+    }
+
+    private void removeFirstElement() {
+        while (this.iterator.hasPrevious()) {
+            this.iterator.previous();
+        }
+        this.iterator.remove();
+        while (this.iterator.hasNext()) {
+            this.iterator.next();
         }
     }
 }

@@ -17,6 +17,7 @@ public class Application {
     public static void main(String[] args) {
         Example1();
         Example2();
+        Example3();
     }
 
     public static void Example1(){
@@ -34,7 +35,6 @@ public class Application {
 
             undoManager.undo();
             undoManager.undo();
-            undoManager.redo();
 
         } catch (IllegalStateException e) {
             System.out.println("Error: " + e.getMessage());
@@ -67,6 +67,31 @@ public class Application {
             undoManager.registerChange(changeFactory.createInsertion(2, "really ", 2, 2));
 
             undoManager.redo();
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+
+
+    public static void Example3(){
+        System.out.println("**************Example #3 is running*************************");
+
+        try {
+            Document doc = new BasicDocument();
+            int newBufferSize = 2;
+
+            UndoManagerFactory factory = new BasicUndoManagerFactory();
+            UndoManager undoManager = factory.createUndoManager(doc, newBufferSize);
+
+            ChangeFactory changeFactory = new BasicChangeFactory();
+
+            undoManager.registerChange(changeFactory.createInsertion(0, "I ", 0, 2));
+            undoManager.registerChange(changeFactory.createInsertion(2, "can ", 2, 6));
+            undoManager.registerChange(changeFactory.createInsertion(6, "see ", 6, 10));
+            undoManager.registerChange(changeFactory.createInsertion(10, "you.", 10, 1));
+            undoManager.registerChange(changeFactory.createDeletion(2, "can", 2, 2));
+            undoManager.registerChange(changeFactory.createInsertion(2, "want to", 2, 2));
         } catch (IllegalStateException e) {
             System.out.println("Error: " + e.getMessage());
         }
