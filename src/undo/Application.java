@@ -12,7 +12,8 @@ import undo.interfaces.UndoManagerFactory;
  * Created by Bacet on 7/18/2017.
  */
 public class Application {
-    private static int BUFFER_SIZE = 9;
+    private static int DEFAULT_BUFFER_SIZE = 9;
+    private static int SMALL_BUFFER_SIZE = 2;
 
     public static void main(String[] args) {
         Example1();
@@ -27,7 +28,7 @@ public class Application {
             Document doc = new BasicDocument();
 
             UndoManagerFactory factory = new BasicUndoManagerFactory();
-            UndoManager undoManager = factory.createUndoManager(doc, BUFFER_SIZE);
+            UndoManager undoManager = factory.createUndoManager(doc, DEFAULT_BUFFER_SIZE);
 
             ChangeFactory changeFactory = new BasicChangeFactory();
 
@@ -48,7 +49,7 @@ public class Application {
             Document doc = new BasicDocument();
 
             UndoManagerFactory factory = new BasicUndoManagerFactory();
-            UndoManager undoManager = factory.createUndoManager(doc, BUFFER_SIZE);
+            UndoManager undoManager = factory.createUndoManager(doc, DEFAULT_BUFFER_SIZE);
 
             ChangeFactory changeFactory = new BasicChangeFactory();
 
@@ -79,10 +80,9 @@ public class Application {
 
         try {
             Document doc = new BasicDocument();
-            int newBufferSize = 2;
 
             UndoManagerFactory factory = new BasicUndoManagerFactory();
-            UndoManager undoManager = factory.createUndoManager(doc, newBufferSize);
+            UndoManager undoManager = factory.createUndoManager(doc, SMALL_BUFFER_SIZE);
 
             ChangeFactory changeFactory = new BasicChangeFactory();
 
